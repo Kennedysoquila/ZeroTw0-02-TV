@@ -7,9 +7,10 @@ import DigitalClock from "./digital-clock"
 interface VideoPlayerProps {
   url: string
   type: "dash" | "m3u8"
+  onError?: () => void
 }
 
-export default function VideoPlayer({ url, type }: VideoPlayerProps) {
+export default function VideoPlayer({ url, type, onError }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -214,6 +215,14 @@ export default function VideoPlayer({ url, type }: VideoPlayerProps) {
             <AlertCircle className="w-12 h-12 text-red-500" />
             <p className="text-sm text-foreground">{error}</p>
             <p className="text-xs text-muted-foreground">Try selecting a different channel from the list</p>
+            {onError && (
+              <button
+                onClick={onError}
+                className="mt-4 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-semibold transition-colors"
+              >
+                Try Next Channel
+              </button>
+            )}
           </div>
         </div>
       )}

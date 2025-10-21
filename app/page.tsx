@@ -18,6 +18,11 @@ export default function Home() {
     setSelectedChannel(0)
   }, [searchQuery])
 
+  const handleChannelError = () => {
+    const nextIndex = (selectedChannel + 1) % filteredChannels.length
+    setSelectedChannel(nextIndex)
+  }
+
   const currentChannel = filteredChannels[selectedChannel] || channels[0]
 
   return (
@@ -45,7 +50,7 @@ export default function Home() {
         <div className="flex-1 min-w-0">
           <div className="bg-card rounded-xl overflow-hidden border border-primary/20 shadow-2xl">
             <div className="aspect-video bg-black relative">
-              <VideoPlayer url={currentChannel.url} type={currentChannel.type} />
+              <VideoPlayer url={currentChannel.url} type={currentChannel.type} onError={handleChannelError} />
             </div>
             <div className="p-4 bg-gradient-to-r from-secondary to-secondary/80 border-t border-primary/20">
               <h2 className="text-xl font-bold text-foreground">{currentChannel.name}</h2>
