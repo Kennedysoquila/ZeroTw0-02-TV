@@ -16,6 +16,28 @@ export default function VideoPlayer({ url, type }: VideoPlayerProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [showControls, setShowControls] = useState(true)
+  const controlsTimeoutRef = useRef<NodeJS.Timeout>()
+
+  const handleMouseMove = () => {
+    setShowControls(true)
+    if (controlsTimeoutRef.current) {
+      clearTimeout(controlsTimeoutRef.current)
+    }
+    if (isFullscreen) {
+      controlsTimeoutRef.current = setTimeout(() => {
+        setShowControls(false)
+      }, 3000)
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const video = videoRef.current
@@ -158,7 +180,7 @@ export default function VideoPlayer({ url, type }: VideoPlayerProps) {
   }
 
   return (
-    <div className="relative w-full h-full bg-black group">
+    <div className="relative w-full h-full bg-black group" onMouseMove={handleMouseMove}>
       <video
         ref={videoRef}
         className="w-full h-full"
@@ -196,8 +218,12 @@ export default function VideoPlayer({ url, type }: VideoPlayerProps) {
         </div>
       )}
 
-      {/* Custom Controls */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      {/* Custom Controls - Always visible in fullscreen, hover-based outside fullscreen */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 transition-opacity duration-200 ${
+          isFullscreen ? (showControls ? "opacity-100" : "opacity-0") : "opacity-0 group-hover:opacity-100"
+        }`}
+      >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <button

@@ -29,13 +29,13 @@ export default function ChannelList({ channels, selectedIndex, onSelectChannel }
   }, [selectedIndex])
 
   return (
-    <div className="flex flex-col gap-1 p-2">
+    <div className="flex flex-col gap-2 p-3">
       {channels.map((channel, index) => (
         <button
           key={channel.id}
           ref={index === selectedIndex ? selectedChannelRef : null}
           onClick={() => onSelectChannel(index)}
-          className={`w-full px-3 py-3 rounded-lg font-medium transition-all text-left group relative overflow-hidden ${
+          className={`w-full px-2 py-2 rounded-lg font-medium transition-all text-left group relative overflow-hidden ${
             index === selectedIndex
               ? "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/50"
               : "bg-secondary/50 text-foreground hover:bg-secondary border border-transparent hover:border-primary/50"
@@ -43,8 +43,8 @@ export default function ChannelList({ channels, selectedIndex, onSelectChannel }
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              {index === selectedIndex && <Play className="w-4 h-4 flex-shrink-0 fill-current" />}
-              <span className="truncate text-sm">{channel.name}</span>
+              {index === selectedIndex && <Play className="w-3 h-3 flex-shrink-0 fill-current" />}
+              <span className="truncate text-xs">{channel.name}</span>
             </div>
             <span
               className={`text-xs font-bold flex-shrink-0 px-2 py-1 rounded ${
