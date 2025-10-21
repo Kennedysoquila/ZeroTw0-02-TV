@@ -59,17 +59,6 @@ export function initializeAntiDevProtection() {
     childList: true,
     subtree: true,
   })
-
-  Object.defineProperty(window, "console", {
-    get() {
-      autoStartSite()
-      return {}
-    },
-  })
-
-  setInterval(() => {
-    debugger
-  }, 100)
 }
 
 function autoStartSite() {
