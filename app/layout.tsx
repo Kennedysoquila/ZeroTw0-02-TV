@@ -8,7 +8,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "ZeroTw0-02 - Live TV Streaming",
+  title: "ZeroTw0-02 TV - Live Streaming",
   description: "Watch live TV channels with support for DASH and HLS streaming",
   generator: "v0.app",
 }

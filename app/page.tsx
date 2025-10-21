@@ -31,7 +31,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                ZeroTw0-02
+                ZeroTw0-02 TV
               </h1>
               <p className="text-xs text-muted-foreground">Live Streaming Platform</p>
             </div>
