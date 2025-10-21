@@ -56,6 +56,8 @@ export default function VideoPlayer({ url, type, onError }: VideoPlayerProps) {
 
   const loadDashPlayer = async (video: HTMLVideoElement, url: string) => {
     try {
+      const proxyUrl = `/api/stream?url=${encodeURIComponent(url)}`
+
       const script = document.createElement("script")
       script.src = "https://cdn.dashjs.org/latest/dash.all.min.js"
       script.onload = () => {
@@ -67,16 +69,20 @@ export default function VideoPlayer({ url, type, onError }: VideoPlayerProps) {
             player.on(dashjs.MediaPlayer.events.ERROR, (event: any) => {
               console.log("[v0] DASH Error:", event.error?.message)
               if (event.error?.message?.includes("DRM") || event.error?.message?.includes("KeySystem")) {
-                setError("This stream is DRM protected and cannot be played in this environment")
+                setError(
+                  "DRM protected stream. This stream requires encryption keys that may not be available in your region.",
+                )
               } else if (event.error?.message?.includes("MANIFEST")) {
                 setError("Stream format not supported or invalid URL")
+              } else if (event.error?.message?.includes("not available")) {
+                setError("Stream is not available. It may be expired or geographically restricted.")
               } else {
                 setError("Failed to load stream. Try another channel.")
               }
               setIsLoading(false)
             })
 
-            player.initialize(video, url, true)
+            player.initialize(video, proxyUrl, true)
             setIsLoading(false)
           }
         } catch (err) {
@@ -99,6 +105,8 @@ export default function VideoPlayer({ url, type, onError }: VideoPlayerProps) {
 
   const loadHlsPlayer = async (video: HTMLVideoElement, url: string) => {
     try {
+      const proxyUrl = `/api/stream?url=${encodeURIComponent(url)}`
+
       const script = document.createElement("script")
       script.src = "https://cdn.jsdelivr.net/npm/hls.js@latest"
       script.onload = () => {
@@ -116,18 +124,20 @@ export default function VideoPlayer({ url, type, onError }: VideoPlayerProps) {
               } else if (data.type === "mediaError") {
                 setError("Media error. This stream may not be compatible.")
               } else if (data.details?.includes("DRM") || data.details?.includes("KeySystem")) {
-                setError("This stream is DRM protected and cannot be played in this environment")
+                setError(
+                  "DRM protected stream. This stream requires encryption keys that may not be available in your region.",
+                )
               } else {
                 setError("Failed to load stream. Try another channel.")
               }
               setIsLoading(false)
             })
 
-            hls.loadSource(url)
+            hls.loadSource(proxyUrl)
             hls.attachMedia(video)
             setIsLoading(false)
           } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-            video.src = url
+            video.src = proxyUrl
             setIsLoading(false)
           } else {
             setError("HLS playback not supported in this browser")
